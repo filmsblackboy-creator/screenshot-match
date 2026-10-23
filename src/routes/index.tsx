@@ -176,7 +176,7 @@ function Info({ icon, label, value }: { icon: React.ReactNode; label: string; va
       <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">{icon}</span>
       <div>
         <div className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}</div>
-        <div className="font-semibold capitalize-first">{value}</div>
+        <div className="font-semibold first-letter:uppercase">{value}</div>
       </div>
     </div>
   );
