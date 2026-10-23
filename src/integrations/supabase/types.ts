@@ -14,16 +14,210 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      diaper_sizes: {
+        Row: {
+          active: boolean
+          brands: string | null
+          code: string
+          created_at: string
+          description: string | null
+          goal: number
+          id: string
+          image_url: string | null
+          label: string
+          reserved: number
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          brands?: string | null
+          code: string
+          created_at?: string
+          description?: string | null
+          goal?: number
+          id?: string
+          image_url?: string | null
+          label: string
+          reserved?: number
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          brands?: string | null
+          code?: string
+          created_at?: string
+          description?: string | null
+          goal?: number
+          id?: string
+          image_url?: string | null
+          label?: string
+          reserved?: number
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      event_settings: {
+        Row: {
+          baby_name: string
+          cover_image_url: string | null
+          event_at: string | null
+          family_info: string | null
+          headline: string
+          id: number
+          location: string | null
+          location_url: string | null
+          primary_color: string | null
+          thank_you_message: string
+          updated_at: string
+          welcome_message: string
+        }
+        Insert: {
+          baby_name?: string
+          cover_image_url?: string | null
+          event_at?: string | null
+          family_info?: string | null
+          headline?: string
+          id?: number
+          location?: string | null
+          location_url?: string | null
+          primary_color?: string | null
+          thank_you_message?: string
+          updated_at?: string
+          welcome_message?: string
+        }
+        Update: {
+          baby_name?: string
+          cover_image_url?: string | null
+          event_at?: string | null
+          family_info?: string | null
+          headline?: string
+          id?: number
+          location?: string | null
+          location_url?: string | null
+          primary_color?: string | null
+          thank_you_message?: string
+          updated_at?: string
+          welcome_message?: string
+        }
+        Relationships: []
+      }
+      reservations: {
+        Row: {
+          code: string
+          created_at: string
+          guest_name: string
+          id: string
+          is_demo: boolean
+          message: string | null
+          phone: string | null
+          quantity: number
+          request_id: string | null
+          size_id: string
+          status: Database["public"]["Enums"]["reservation_status"]
+          token_hash: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          guest_name: string
+          id?: string
+          is_demo?: boolean
+          message?: string | null
+          phone?: string | null
+          quantity: number
+          request_id?: string | null
+          size_id: string
+          status?: Database["public"]["Enums"]["reservation_status"]
+          token_hash: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          guest_name?: string
+          id?: string
+          is_demo?: boolean
+          message?: string | null
+          phone?: string | null
+          quantity?: number
+          request_id?: string | null
+          size_id?: string
+          status?: Database["public"]["Enums"]["reservation_status"]
+          token_hash?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_size_id_fkey"
+            columns: ["size_id"]
+            isOneToOne: false
+            referencedRelation: "diaper_sizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_exists: { Args: never; Returns: boolean }
+      cancel_reservation_by_token: { Args: { _token: string }; Returns: Json }
+      claim_first_admin: { Args: never; Returns: boolean }
+      clear_demo_data: { Args: never; Returns: number }
+      create_reservation: {
+        Args: {
+          _message: string
+          _name: string
+          _phone: string
+          _quantity: number
+          _request_id: string
+          _size_id: string
+        }
+        Returns: Json
+      }
+      get_reservation_by_token: { Args: { _token: string }; Returns: Json }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      recompute_size_reserved: { Args: { _size: string }; Returns: undefined }
+      update_reservation_by_token: {
+        Args: {
+          _message: string
+          _name: string
+          _phone: string
+          _quantity: number
+          _token: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin"
+      reservation_status: "reservado" | "entregue" | "cancelado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +344,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin"],
+      reservation_status: ["reservado", "entregue", "cancelado"],
+    },
   },
 } as const
