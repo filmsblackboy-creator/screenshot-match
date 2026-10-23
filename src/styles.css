@@ -82,7 +82,8 @@
   --butter-foreground: oklch(0.4 0.06 80);
   --sage-soft: oklch(0.9 0.04 145);
   --success: oklch(0.62 0.1 155);
-  --gradient-hero: radial-gradient(ellipse at top left, oklch(0.93 0.04 145 / 0.7), transparent 60%),
+  --gradient-hero:
+    radial-gradient(ellipse at top left, oklch(0.93 0.04 145 / 0.7), transparent 60%),
     radial-gradient(ellipse at bottom right, oklch(0.92 0.04 235 / 0.6), transparent 55%);
   --shadow-soft: 0 10px 30px -12px oklch(0.4 0.05 150 / 0.18);
   --shadow-lift: 0 18px 40px -16px oklch(0.4 0.05 150 / 0.28);
@@ -111,7 +112,9 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: var(--font-display);
   }
 }
@@ -127,12 +130,23 @@
 }
 
 @keyframes float-soft {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 @keyframes rise-in {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @utility animate-float-soft {
   animation: float-soft 6s ease-in-out infinite;

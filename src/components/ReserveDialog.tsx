@@ -5,7 +5,13 @@ import { z } from "zod";
 import { Minus, Plus, Heart, Copy, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,12 +19,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { available, friendlyError, type DiaperSize } from "@/lib/event";
 
 const schema = z.object({
-  name: z.string().trim().min(2, "Por favor, informe seu nome completo.").max(120, "Nome muito longo."),
+  name: z
+    .string()
+    .trim()
+    .min(2, "Por favor, informe seu nome completo.")
+    .max(120, "Nome muito longo."),
   phone: z.string().trim().max(30, "Telefone muito longo.").optional(),
   message: z.string().trim().max(1000, "Mensagem muito longa.").optional(),
 });
 
-type Result = { token: string; code: string; size_code: string; size_label: string; quantity: number };
+type Result = {
+  token: string;
+  code: string;
+  size_code: string;
+  size_label: string;
+  quantity: number;
+};
 
 export function ReserveDialog({
   size,
@@ -79,14 +95,17 @@ export function ReserveDialog({
     qc.invalidateQueries({ queryKey: ["diaper_sizes"] });
     if (err) {
       setError(friendlyError(err));
-      if (err.message.includes("NOT_ENOUGH_AVAILABLE:0") || err.message.includes("SIZE_NOT_FOUND")) setSoldOut(true);
+      if (err.message.includes("NOT_ENOUGH_AVAILABLE:0") || err.message.includes("SIZE_NOT_FOUND"))
+        setSoldOut(true);
       requestId.current = crypto.randomUUID();
       return;
     }
     setResult(data as unknown as Result);
   }
 
-  const link = result ? `${typeof window !== "undefined" ? window.location.origin : ""}/reserva/${result.token}` : "";
+  const link = result
+    ? `${typeof window !== "undefined" ? window.location.origin : ""}/reserva/${result.token}`
+    : "";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -110,10 +129,16 @@ export function ReserveDialog({
             <div className="mt-4 rounded-2xl border bg-card p-4 text-left">
               <p className="text-sm font-semibold">Seu link privado</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Guarde este link para consultar, alterar ou cancelar sua reserva. Ele não será exibido novamente.
+                Guarde este link para consultar, alterar ou cancelar sua reserva. Ele não será
+                exibido novamente.
               </p>
               <div className="mt-3 flex gap-2">
-                <Input readOnly value={link} className="text-xs" onFocus={(e) => e.currentTarget.select()} />
+                <Input
+                  readOnly
+                  value={link}
+                  className="text-xs"
+                  onFocus={(e) => e.currentTarget.select()}
+                />
                 <Button
                   type="button"
                   variant="outline"
@@ -133,7 +158,10 @@ export function ReserveDialog({
                 </Link>
               </Button>
             </div>
-            <Button className="mt-5 h-12 w-full rounded-full text-base" onClick={() => onOpenChange(false)}>
+            <Button
+              className="mt-5 h-12 w-full rounded-full text-base"
+              onClick={() => onOpenChange(false)}
+            >
               <Check className="h-5 w-5" /> Concluir
             </Button>
           </div>
@@ -152,39 +180,107 @@ export function ReserveDialog({
             {soldOut ? (
               <div className="rounded-2xl bg-butter p-4 text-butter-foreground">
                 <p className="font-semibold">{error}</p>
-                <Button type="button" variant="outline" className="mt-3 rounded-full" onClick={() => onOpenChange(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-3 rounded-full"
+                  onClick={() => onOpenChange(false)}
+                >
                   Escolher outro tamanho
                 </Button>
               </div>
             ) : (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-base">Seu nome completo *</Label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={120} required className="h-12 text-base" autoComplete="name" />
+                  <Label htmlFor="name" className="text-base">
+                    Seu nome completo *
+                  </Label>
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    maxLength={120}
+                    required
+                    className="h-12 text-base"
+                    autoComplete="name"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-base">Telefone / WhatsApp (opcional)</Label>
-                  <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={30} inputMode="tel" className="h-12 text-base" autoComplete="tel" />
+                  <Label htmlFor="phone" className="text-base">
+                    Telefone / WhatsApp (opcional)
+                  </Label>
+                  <Input
+                    id="phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    maxLength={30}
+                    inputMode="tel"
+                    className="h-12 text-base"
+                    autoComplete="tel"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-base">Quantidade de pacotes</Label>
                   <div className="flex items-center gap-3">
-                    <Button type="button" variant="outline" size="icon" className="h-12 w-12 rounded-full" disabled={qty <= 1} onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      className="h-12 w-12 rounded-full"
+                      disabled={qty <= 1}
+                      onClick={() => setQty((q) => Math.max(1, q - 1))}
+                      aria-label="Diminuir"
+                    >
                       <Minus className="h-5 w-5" />
                     </Button>
-                    <span className="w-12 text-center text-2xl font-bold" aria-live="polite">{qty}</span>
-                    <Button type="button" variant="outline" size="icon" className="h-12 w-12 rounded-full" disabled={qty >= left} onClick={() => setQty((q) => Math.min(left, q + 1))} aria-label="Aumentar">
+                    <span className="w-12 text-center text-2xl font-bold" aria-live="polite">
+                      {qty}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      className="h-12 w-12 rounded-full"
+                      disabled={qty >= left}
+                      onClick={() => setQty((q) => Math.min(left, q + 1))}
+                      aria-label="Aumentar"
+                    >
                       <Plus className="h-5 w-5" />
                     </Button>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="msg" className="text-base">Mensagem para a família (opcional)</Label>
-                  <Textarea id="msg" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={1000} rows={3} />
+                  <Label htmlFor="msg" className="text-base">
+                    Mensagem para a família (opcional)
+                  </Label>
+                  <Textarea
+                    id="msg"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    maxLength={1000}
+                    rows={3}
+                  />
                 </div>
-                {error && <p className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive" role="alert">{error}</p>}
-                <Button type="submit" disabled={submitting || left < 1} className="h-14 w-full rounded-full text-base font-bold">
-                  {submitting ? <><Loader2 className="h-5 w-5 animate-spin" /> Reservando…</> : "Confirmar minha reserva"}
+                {error && (
+                  <p
+                    className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive"
+                    role="alert"
+                  >
+                    {error}
+                  </p>
+                )}
+                <Button
+                  type="submit"
+                  disabled={submitting || left < 1}
+                  className="h-14 w-full rounded-full text-base font-bold"
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" /> Reservando…
+                    </>
+                  ) : (
+                    "Confirmar minha reserva"
+                  )}
                 </Button>
               </>
             )}

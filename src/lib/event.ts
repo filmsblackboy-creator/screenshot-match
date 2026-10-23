@@ -10,7 +10,11 @@ export type Reservation = Tables<"reservations">;
 export const settingsQuery = queryOptions({
   queryKey: ["event_settings"],
   queryFn: async () => {
-    const { data, error } = await supabase.from("event_settings").select("*").eq("id", 1).maybeSingle();
+    const { data, error } = await supabase
+      .from("event_settings")
+      .select("*")
+      .eq("id", 1)
+      .maybeSingle();
     if (error) throw error;
     return data;
   },

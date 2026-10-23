@@ -23,10 +23,15 @@ export function SettingsForm() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (data) { setF(data); setWhen(toLocal(data.event_at)); }
+    if (data) {
+      setF(data);
+      setWhen(toLocal(data.event_at));
+    }
   }, [data]);
 
-  const set = (k: keyof EventSettings) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setF({ ...f, [k]: e.target.value });
+  const set =
+    (k: keyof EventSettings) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setF({ ...f, [k]: e.target.value });
 
   async function save() {
     setBusy(true);
@@ -52,26 +57,79 @@ export function SettingsForm() {
 
   return (
     <div className="grid gap-4 rounded-3xl border bg-card p-6 shadow-soft md:grid-cols-2">
-      <F label="Nome do bebê"><Input value={f.baby_name ?? ""} onChange={set("baby_name")} /></F>
-      <F label="Frase principal"><Input value={f.headline ?? ""} onChange={set("headline")} /></F>
-      <F label="Mensagem de boas-vindas" wide><Textarea rows={3} value={f.welcome_message ?? ""} onChange={set("welcome_message")} /></F>
-      <F label="Data e horário"><Input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} /></F>
-      <F label="Local"><Input value={f.location ?? ""} onChange={set("location")} /></F>
-      <F label="Link do mapa (opcional)"><Input value={f.location_url ?? ""} placeholder="https://maps.google.com/…" onChange={set("location_url")} /></F>
-      <F label="Informações da família"><Input value={f.family_info ?? ""} onChange={set("family_info")} /></F>
-      <F label="Mensagem de agradecimento" wide><Input value={f.thank_you_message ?? ""} onChange={set("thank_you_message")} /></F>
-      <F label="Imagem de capa (URL)"><Input value={f.cover_image_url ?? ""} placeholder="https://…" onChange={set("cover_image_url")} /></F>
+      <F label="Nome do bebê">
+        <Input value={f.baby_name ?? ""} onChange={set("baby_name")} />
+      </F>
+      <F label="Frase principal">
+        <Input value={f.headline ?? ""} onChange={set("headline")} />
+      </F>
+      <F label="Mensagem de boas-vindas" wide>
+        <Textarea rows={3} value={f.welcome_message ?? ""} onChange={set("welcome_message")} />
+      </F>
+      <F label="Data e horário">
+        <Input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} />
+      </F>
+      <F label="Local">
+        <Input value={f.location ?? ""} onChange={set("location")} />
+      </F>
+      <F label="Link do mapa (opcional)">
+        <Input
+          value={f.location_url ?? ""}
+          placeholder="https://maps.google.com/…"
+          onChange={set("location_url")}
+        />
+      </F>
+      <F label="Informações da família">
+        <Input value={f.family_info ?? ""} onChange={set("family_info")} />
+      </F>
+      <F label="Mensagem de agradecimento" wide>
+        <Input value={f.thank_you_message ?? ""} onChange={set("thank_you_message")} />
+      </F>
+      <F label="Imagem de capa (URL)">
+        <Input
+          value={f.cover_image_url ?? ""}
+          placeholder="https://…"
+          onChange={set("cover_image_url")}
+        />
+      </F>
       <F label="Cor principal">
         <div className="flex gap-2">
-          <input type="color" aria-label="Escolher cor" className="h-10 w-14 cursor-pointer rounded-md border bg-transparent" value={f.primary_color?.startsWith("#") ? f.primary_color : "#7a9e83"} onChange={set("primary_color")} />
-          <Input value={f.primary_color ?? ""} placeholder="Padrão (verde-sálvia)" onChange={set("primary_color")} />
+          <input
+            type="color"
+            aria-label="Escolher cor"
+            className="h-10 w-14 cursor-pointer rounded-md border bg-transparent"
+            value={f.primary_color?.startsWith("#") ? f.primary_color : "#7a9e83"}
+            onChange={set("primary_color")}
+          />
+          <Input
+            value={f.primary_color ?? ""}
+            placeholder="Padrão (verde-sálvia)"
+            onChange={set("primary_color")}
+          />
         </div>
       </F>
-      <div className="md:col-span-2"><Button disabled={busy} onClick={save} className="h-12 rounded-full px-8 font-bold">Salvar configurações</Button></div>
+      <div className="md:col-span-2">
+        <Button disabled={busy} onClick={save} className="h-12 rounded-full px-8 font-bold">
+          Salvar configurações
+        </Button>
+      </div>
     </div>
   );
 }
 
-function F({ label, wide, children }: { label: string; wide?: boolean; children: React.ReactNode }) {
-  return <div className={`space-y-1 ${wide ? "md:col-span-2" : ""}`}><Label>{label}</Label>{children}</div>;
+function F({
+  label,
+  wide,
+  children,
+}: {
+  label: string;
+  wide?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={`space-y-1 ${wide ? "md:col-span-2" : ""}`}>
+      <Label>{label}</Label>
+      {children}
+    </div>
+  );
 }

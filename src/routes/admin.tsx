@@ -42,8 +42,13 @@ function AdminPage() {
   }, []);
 
   useEffect(() => {
-    if (!session) { setIsAdmin(null); return; }
-    supabase.rpc("claim_first_admin").then(({ data, error }) => setIsAdmin(!error && data === true));
+    if (!session) {
+      setIsAdmin(null);
+      return;
+    }
+    supabase
+      .rpc("claim_first_admin")
+      .then(({ data, error }) => setIsAdmin(!error && data === true));
   }, [session?.user.id]);
 
   async function signOut() {
@@ -53,7 +58,11 @@ function AdminPage() {
   }
 
   if (session === undefined || (session && isAdmin === null))
-    return <div className="flex min-h-screen items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
 
   if (!session) return <AuthForm />;
 
@@ -61,8 +70,12 @@ function AdminPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-5 text-center">
         <h1 className="text-2xl font-semibold">Acesso restrito</h1>
-        <p className="mt-2 max-w-sm text-muted-foreground">Sua conta ({session.user.email}) não tem permissão de administrador.</p>
-        <Button className="mt-6 rounded-full" variant="outline" onClick={signOut}>Sair</Button>
+        <p className="mt-2 max-w-sm text-muted-foreground">
+          Sua conta ({session.user.email}) não tem permissão de administrador.
+        </p>
+        <Button className="mt-6 rounded-full" variant="outline" onClick={signOut}>
+          Sair
+        </Button>
       </div>
     );
 
@@ -70,8 +83,12 @@ function AdminPage() {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <Link to="/" className="flex items-center gap-2 font-display text-xl font-semibold"><Baby className="h-5 w-5 text-primary" /> Painel do chá</Link>
-          <Button variant="ghost" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> Sair</Button>
+          <Link to="/" className="flex items-center gap-2 font-display text-xl font-semibold">
+            <Baby className="h-5 w-5 text-primary" /> Painel do chá
+          </Link>
+          <Button variant="ghost" size="sm" onClick={signOut}>
+            <LogOut className="h-4 w-4" /> Sair
+          </Button>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-5 py-8">
@@ -82,10 +99,18 @@ function AdminPage() {
             <TabsTrigger value="fraldas">Fraldas</TabsTrigger>
             <TabsTrigger value="evento">Evento</TabsTrigger>
           </TabsList>
-          <TabsContent value="dashboard"><Dashboard /></TabsContent>
-          <TabsContent value="reservas"><ReservationsTable /></TabsContent>
-          <TabsContent value="fraldas"><SizesManager /></TabsContent>
-          <TabsContent value="evento"><SettingsForm /></TabsContent>
+          <TabsContent value="dashboard">
+            <Dashboard />
+          </TabsContent>
+          <TabsContent value="reservas">
+            <ReservationsTable />
+          </TabsContent>
+          <TabsContent value="fraldas">
+            <SizesManager />
+          </TabsContent>
+          <TabsContent value="evento">
+            <SettingsForm />
+          </TabsContent>
         </Tabs>
       </main>
     </div>
@@ -113,24 +138,63 @@ function AuthForm() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) toast.error("E-mail ou senha incorretos.");
     } else {
-      const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/admin` } });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/admin` },
+      });
       if (error) toast.error(error.message);
-      else if (!data.session) toast.success("Conta criada! Confirme pelo link enviado ao seu e-mail e depois entre.");
+      else if (!data.session)
+        toast.success("Conta criada! Confirme pelo link enviado ao seu e-mail e depois entre.");
     }
     setBusy(false);
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-hero px-5">
-      <form onSubmit={submit} className="w-full max-w-sm space-y-4 rounded-3xl border bg-card p-7 shadow-soft">
-        <h1 className="text-2xl font-semibold">{mode === "in" ? "Entrar no painel" : "Criar acesso da família"}</h1>
+      <form
+        onSubmit={submit}
+        className="w-full max-w-sm space-y-4 rounded-3xl border bg-card p-7 shadow-soft"
+      >
+        <h1 className="text-2xl font-semibold">
+          {mode === "in" ? "Entrar no painel" : "Criar acesso da família"}
+        </h1>
         {adminExists === false && (
-          <p className="rounded-xl bg-butter p-3 text-sm text-butter-foreground">Ainda não há administrador. A primeira conta criada será a administradora.</p>
+          <p className="rounded-xl bg-butter p-3 text-sm text-butter-foreground">
+            Ainda não há administrador. A primeira conta criada será a administradora.
+          </p>
         )}
-        <div className="space-y-2"><Label htmlFor="e">E-mail</Label><Input id="e" type="email" required className="h-12" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-        <div className="space-y-2"><Label htmlFor="pw">Senha</Label><Input id="pw" type="password" required minLength={8} className="h-12" value={password} onChange={(e) => setPassword(e.target.value)} /></div>
-        <Button type="submit" disabled={busy} className="h-12 w-full rounded-full font-bold">{busy ? <Loader2 className="animate-spin" /> : mode === "in" ? "Entrar" : "Criar conta"}</Button>
-        <button type="button" className="w-full text-sm text-muted-foreground hover:underline" onClick={() => setMode(mode === "in" ? "up" : "in")}>
+        <div className="space-y-2">
+          <Label htmlFor="e">E-mail</Label>
+          <Input
+            id="e"
+            type="email"
+            required
+            className="h-12"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="pw">Senha</Label>
+          <Input
+            id="pw"
+            type="password"
+            required
+            minLength={8}
+            className="h-12"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <Button type="submit" disabled={busy} className="h-12 w-full rounded-full font-bold">
+          {busy ? <Loader2 className="animate-spin" /> : mode === "in" ? "Entrar" : "Criar conta"}
+        </Button>
+        <button
+          type="button"
+          className="w-full text-sm text-muted-foreground hover:underline"
+          onClick={() => setMode(mode === "in" ? "up" : "in")}
+        >
           {mode === "in" ? "Primeiro acesso? Criar conta" : "Já tenho conta"}
         </button>
       </form>

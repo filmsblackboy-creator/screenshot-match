@@ -5,7 +5,13 @@ import { CalendarHeart, Clock, MapPin, Share2, Link2, Gift, Sparkles, Baby } fro
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/ReserveDialog";
-import { available, settingsQuery, sizesQuery, useLiveEventData, type DiaperSize } from "@/lib/event";
+import {
+  available,
+  settingsQuery,
+  sizesQuery,
+  useLiveEventData,
+  type DiaperSize,
+} from "@/lib/event";
 import heroImg from "@/assets/hero.jpg";
 import packImg from "@/assets/diaper-pack.jpg";
 
@@ -13,9 +19,15 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Chá de Fraldas — Escolha seu pacotinho de amor" },
-      { name: "description", content: "Nosso bebê está chegando! Reserve fraldas para o nosso chá em poucos cliques." },
+      {
+        name: "description",
+        content: "Nosso bebê está chegando! Reserve fraldas para o nosso chá em poucos cliques.",
+      },
       { property: "og:title", content: "Chá de Fraldas — Nosso bebê está chegando!" },
-      { property: "og:description", content: "Escolha um pacotinho de amor e ajude a preparar a chegada do nosso bebê." },
+      {
+        property: "og:description",
+        content: "Escolha um pacotinho de amor e ajude a preparar a chegada do nosso bebê.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -53,10 +65,12 @@ function Index() {
   const [selected, setSelected] = useState<DiaperSize | null>(null);
   const cd = useCountdown(settings?.event_at);
   const visible = sizes.filter((s) => s.active);
-  const current = selected ? visible.find((s) => s.id === selected.id) ?? selected : null;
+  const current = selected ? (visible.find((s) => s.id === selected.id) ?? selected) : null;
 
   const eventDate = settings?.event_at ? new Date(settings.event_at) : null;
-  const style = settings?.primary_color ? ({ "--primary": settings.primary_color, "--ring": settings.primary_color } as CSSProperties) : undefined;
+  const style = settings?.primary_color
+    ? ({ "--primary": settings.primary_color, "--ring": settings.primary_color } as CSSProperties)
+    : undefined;
 
   const share = () => {
     const url = window.location.origin;
@@ -75,17 +89,31 @@ function Index() {
         <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 pb-14 pt-10 md:grid-cols-2 md:pt-16">
           <div className="animate-rise text-center md:text-left">
             <span className="inline-flex items-center gap-2 rounded-full bg-butter px-4 py-1.5 text-sm font-bold text-butter-foreground">
-              <Baby className="h-4 w-4" /> Chá de fraldas {settings?.baby_name ? `do ${settings.baby_name}` : ""}
+              <Baby className="h-4 w-4" /> Chá de fraldas{" "}
+              {settings?.baby_name ? `do ${settings.baby_name}` : ""}
             </span>
             <h1 className="mt-5 text-4xl font-semibold leading-tight md:text-6xl">
               {settings?.headline ?? "Nosso bebê está chegando!"}
             </h1>
-            <p className="mx-auto mt-5 max-w-lg text-lg text-muted-foreground md:mx-0">{settings?.welcome_message}</p>
+            <p className="mx-auto mt-5 max-w-lg text-lg text-muted-foreground md:mx-0">
+              {settings?.welcome_message}
+            </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
-              <Button asChild size="lg" className="h-14 rounded-full px-8 text-base font-bold shadow-lift">
-                <a href="#fraldas"><Gift className="h-5 w-5" /> Escolher minhas fraldas</a>
+              <Button
+                asChild
+                size="lg"
+                className="h-14 rounded-full px-8 text-base font-bold shadow-lift"
+              >
+                <a href="#fraldas">
+                  <Gift className="h-5 w-5" /> Escolher minhas fraldas
+                </a>
               </Button>
-              <Button size="lg" variant="outline" className="h-14 rounded-full px-6 text-base" onClick={share}>
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-14 rounded-full px-6 text-base"
+                onClick={share}
+              >
                 <Share2 className="h-5 w-5" /> Compartilhar
               </Button>
             </div>
@@ -106,23 +134,64 @@ function Index() {
       <section className="mx-auto -mt-6 max-w-6xl px-5">
         <div className="grid gap-4 rounded-3xl border bg-card p-6 shadow-soft md:grid-cols-[1fr_auto] md:items-center">
           <div className="grid gap-3 sm:grid-cols-3">
-            <Info icon={<CalendarHeart className="h-5 w-5" />} label="Data" value={eventDate ? eventDate.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" }) : "A definir"} />
-            <Info icon={<Clock className="h-5 w-5" />} label="Horário" value={eventDate ? eventDate.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "A definir"} />
+            <Info
+              icon={<CalendarHeart className="h-5 w-5" />}
+              label="Data"
+              value={
+                eventDate
+                  ? eventDate.toLocaleDateString("pt-BR", {
+                      weekday: "long",
+                      day: "2-digit",
+                      month: "long",
+                    })
+                  : "A definir"
+              }
+            />
+            <Info
+              icon={<Clock className="h-5 w-5" />}
+              label="Horário"
+              value={
+                eventDate
+                  ? eventDate.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
+                  : "A definir"
+              }
+            />
             <Info
               icon={<MapPin className="h-5 w-5" />}
               label="Local"
               value={
                 settings?.location_url ? (
-                  <a href={settings.location_url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">{settings.location}</a>
-                ) : (settings?.location ?? "A definir")
+                  <a
+                    href={settings.location_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-4"
+                  >
+                    {settings.location}
+                  </a>
+                ) : (
+                  (settings?.location ?? "A definir")
+                )
               }
             />
           </div>
           {cd && !cd.done && (
             <div className="flex justify-center gap-2" aria-label="Contagem regressiva">
-              {([["dias", cd.dias], ["horas", cd.horas], ["min", cd.min], ["seg", cd.seg]] as const).map(([l, v]) => (
-                <div key={l} className="w-16 rounded-2xl bg-secondary py-2 text-center text-secondary-foreground">
-                  <div className="font-display text-2xl font-semibold tabular-nums">{String(v).padStart(2, "0")}</div>
+              {(
+                [
+                  ["dias", cd.dias],
+                  ["horas", cd.horas],
+                  ["min", cd.min],
+                  ["seg", cd.seg],
+                ] as const
+              ).map(([l, v]) => (
+                <div
+                  key={l}
+                  className="w-16 rounded-2xl bg-secondary py-2 text-center text-secondary-foreground"
+                >
+                  <div className="font-display text-2xl font-semibold tabular-nums">
+                    {String(v).padStart(2, "0")}
+                  </div>
                   <div className="text-xs uppercase tracking-wide">{l}</div>
                 </div>
               ))}
@@ -136,10 +205,14 @@ function Index() {
       <main id="fraldas" className="mx-auto max-w-6xl scroll-mt-6 px-5 py-16">
         <div className="text-center">
           <h2 className="text-3xl font-semibold md:text-4xl">Lista de fraldas</h2>
-          <p className="mt-3 text-muted-foreground">1. Escolha o tamanho · 2. Informe nome e quantidade · 3. Confirme</p>
+          <p className="mt-3 text-muted-foreground">
+            1. Escolha o tamanho · 2. Informe nome e quantidade · 3. Confirme
+          </p>
         </div>
         {visible.length === 0 ? (
-          <p className="mt-10 text-center text-muted-foreground">A lista ainda está sendo preparada.</p>
+          <p className="mt-10 text-center text-muted-foreground">
+            A lista ainda está sendo preparada.
+          </p>
         ) : (
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((s, i) => (
@@ -153,10 +226,16 @@ function Index() {
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-5 py-10 text-center">
           {settings?.family_info && <p className="font-display text-xl">{settings.family_info}</p>}
           <div className="flex flex-wrap justify-center gap-3">
-            <Button variant="outline" className="rounded-full" onClick={share}><Share2 className="h-4 w-4" /> Enviar pelo WhatsApp</Button>
-            <Button variant="outline" className="rounded-full" onClick={copy}><Link2 className="h-4 w-4" /> Copiar link</Button>
+            <Button variant="outline" className="rounded-full" onClick={share}>
+              <Share2 className="h-4 w-4" /> Enviar pelo WhatsApp
+            </Button>
+            <Button variant="outline" className="rounded-full" onClick={copy}>
+              <Link2 className="h-4 w-4" /> Copiar link
+            </Button>
           </div>
-          <Link to="/admin" className="text-xs text-muted-foreground hover:underline">Área da família</Link>
+          <Link to="/admin" className="text-xs text-muted-foreground hover:underline">
+            Área da família
+          </Link>
         </div>
       </footer>
 
@@ -170,19 +249,39 @@ function Index() {
   );
 }
 
-function Info({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
+function Info({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+}) {
   return (
     <div className="flex items-start gap-3">
-      <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">{icon}</span>
+      <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
+        {icon}
+      </span>
       <div>
-        <div className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}</div>
+        <div className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+          {label}
+        </div>
         <div className="font-semibold first-letter:uppercase">{value}</div>
       </div>
     </div>
   );
 }
 
-function SizeCard({ size, index, onPick }: { size: DiaperSize; index: number; onPick: () => void }) {
+function SizeCard({
+  size,
+  index,
+  onPick,
+}: {
+  size: DiaperSize;
+  index: number;
+  onPick: () => void;
+}) {
   const left = available(size);
   const pct = size.goal > 0 ? Math.min(100, Math.round((size.reserved / size.goal) * 100)) : 100;
   const done = left === 0;
@@ -192,8 +291,17 @@ function SizeCard({ size, index, onPick }: { size: DiaperSize; index: number; on
       style={{ animationDelay: `${index * 70}ms` }}
     >
       <div className="relative bg-muted">
-        <img src={size.image_url || packImg} alt={`Pacote de fraldas tamanho ${size.code}`} loading="lazy" width={816} height={816} className="aspect-[4/3] w-full object-cover" />
-        <span className="absolute left-4 top-4 rounded-2xl bg-card px-4 py-2 font-display text-3xl font-bold shadow-soft">{size.code}</span>
+        <img
+          src={size.image_url || packImg}
+          alt={`Pacote de fraldas tamanho ${size.code}`}
+          loading="lazy"
+          width={816}
+          height={816}
+          className="aspect-[4/3] w-full object-cover"
+        />
+        <span className="absolute left-4 top-4 rounded-2xl bg-card px-4 py-2 font-display text-3xl font-bold shadow-soft">
+          {size.code}
+        </span>
         {done && (
           <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-butter px-3 py-1 text-sm font-bold text-butter-foreground">
             <Sparkles className="h-4 w-4" /> Meta atingida
@@ -203,7 +311,8 @@ function SizeCard({ size, index, onPick }: { size: DiaperSize; index: number; on
       <div className="flex flex-1 flex-col p-6">
         <h3 className="text-xl font-semibold">Fralda tamanho {size.code}</h3>
         <p className="text-sm text-muted-foreground">
-          {size.label}{size.description ? ` · ${size.description}` : ""}
+          {size.label}
+          {size.description ? ` · ${size.description}` : ""}
         </p>
         {size.brands && <p className="mt-1 text-sm text-muted-foreground">Marcas: {size.brands}</p>}
         <dl className="mt-5 grid grid-cols-3 gap-2 text-center">
@@ -211,11 +320,24 @@ function SizeCard({ size, index, onPick }: { size: DiaperSize; index: number; on
           <Stat label="Reservados" value={size.reserved} />
           <Stat label="Disponíveis" value={left} highlight />
         </dl>
-        <div className="mt-4 h-3 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-          <div className="h-full rounded-full bg-primary transition-all duration-700" style={{ width: `${pct}%` }} />
+        <div
+          className="mt-4 h-3 overflow-hidden rounded-full bg-muted"
+          role="progressbar"
+          aria-valuenow={pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        >
+          <div
+            className="h-full rounded-full bg-primary transition-all duration-700"
+            style={{ width: `${pct}%` }}
+          />
         </div>
         <p className="mt-1 text-right text-xs text-muted-foreground">{pct}% da meta</p>
-        <Button onClick={onPick} disabled={done} className="mt-5 h-12 w-full rounded-full text-base font-bold">
+        <Button
+          onClick={onPick}
+          disabled={done}
+          className="mt-5 h-12 w-full rounded-full text-base font-bold"
+        >
           {done ? "Meta atingida 💛" : "Quero levar"}
         </Button>
       </div>
@@ -225,7 +347,9 @@ function SizeCard({ size, index, onPick }: { size: DiaperSize; index: number; on
 
 function Stat({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
   return (
-    <div className={`rounded-2xl py-2 ${highlight ? "bg-secondary text-secondary-foreground" : "bg-muted"}`}>
+    <div
+      className={`rounded-2xl py-2 ${highlight ? "bg-secondary text-secondary-foreground" : "bg-muted"}`}
+    >
       <dd className="font-display text-2xl font-semibold">{value}</dd>
       <dt className="text-xs">{label}</dt>
     </div>

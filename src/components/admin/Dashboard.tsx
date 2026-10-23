@@ -5,7 +5,10 @@ import { available, sizesQuery, useLiveEventData } from "@/lib/event";
 export const adminReservationsQuery = {
   queryKey: ["admin_reservations"],
   queryFn: async () => {
-    const { data, error } = await supabase.from("reservations").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("reservations")
+      .select("*")
+      .order("created_at", { ascending: false });
     if (error) throw error;
     return data ?? [];
   },
@@ -20,7 +23,9 @@ export function Dashboard() {
   const reserved = active.reduce((a, s) => a + s.reserved, 0);
   const delivered = res.filter((r) => r.status === "entregue").reduce((a, r) => a + r.quantity, 0);
   const left = active.reduce((a, s) => a + available(s), 0);
-  const people = new Set(res.filter((r) => r.status !== "cancelado").map((r) => r.guest_name.trim().toLowerCase())).size;
+  const people = new Set(
+    res.filter((r) => r.status !== "cancelado").map((r) => r.guest_name.trim().toLowerCase()),
+  ).size;
 
   return (
     <div className="space-y-8">
@@ -38,8 +43,20 @@ export function Dashboard() {
             const pct = s.goal ? Math.min(100, Math.round((s.reserved / s.goal) * 100)) : 0;
             return (
               <div key={s.id}>
-                <div className="flex justify-between text-sm"><span className="font-bold">{s.code} · {s.label}</span><span className="text-muted-foreground">{s.reserved}/{s.goal} ({pct}%)</span></div>
-                <div className="mt-1 h-3 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} /></div>
+                <div className="flex justify-between text-sm">
+                  <span className="font-bold">
+                    {s.code} · {s.label}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {s.reserved}/{s.goal} ({pct}%)
+                  </span>
+                </div>
+                <div className="mt-1 h-3 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all"
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
               </div>
             );
           })}
